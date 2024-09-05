@@ -11,7 +11,7 @@ const doSomething = (req, res) => {
 
 
 app.get('/', (req, res) => {
-    res.send("<h1> Hello world </h1>")
+    res.status(200).send("<h1> Hello world </h1>")
 })
 
 
