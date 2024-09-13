@@ -44,27 +44,9 @@ export const getAllJobs = async (req, res) => {
 
 }
 
-export const updateJob = async (req, res) => {
-    const jobId = req.params.id
-
-    console.log(jobId)
-
-    const {position} = req.body
-
-    
-
-    const updatedJob = await Jobs.findOneAndUpdate({_id: jobId}, {position: position}, {new: true, runValidators: true})
-
-    if (!updatedJob){
-        return errorResponse(res, StatusCodes.BAD_REQUEST, `job does not exist`)
-    }
-
-    successResponse(res, StatusCodes.OK, 'successfully updated job details', updatedJob)
-
-
-}
 
 export const deleteJob = async (req, res) => {
+    
     const jobId = req.params.id
 
     const job = await Jobs.findOne({_id: jobId})
@@ -78,6 +60,22 @@ export const deleteJob = async (req, res) => {
     successResponse(res, StatusCodes.OK, `successfully deleted a job`, null)
 
 }
+
+
+export const updateJob = async (req, res) => {
+    const jobId = req.params.id
+    const {position} = req.body
+    
+    const updatedJob = await Jobs.findOneAndUpdate({_id: jobId}, {position: position}, {new: true, runValidators: true})
+
+    if (!updatedJob){
+        return errorResponse(res, StatusCodes.BAD_REQUEST, `job does not exist`)
+    }
+
+    successResponse(res, StatusCodes.OK, 'successfully updated job details', updatedJob)
+
+}
+
 
 
 // winston -> logging 
