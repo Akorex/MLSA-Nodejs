@@ -1,78 +1,112 @@
 import Jobs from '../models/jobs.js'
 import { successResponse, errorResponse } from '../utils/responses.js'
 import {StatusCodes} from 'http-status-codes'
+import logger from '../utils/logger.js'
 
 
 
-export const createJob = async (req, res) => {
+export const createJob = async (req, res, next) => {
+    try{
+        logger.info(`START: Create Job Service`)
+        const {company, position} = req.body
 
-    const {company, position} = req.body
-
-    if (!company || !position){
-        return errorResponse(res, StatusCodes.UNPROCESSABLE_ENTITY, 'missing parameters for job creation')
-    }
-
-    const newJob = await Jobs.create({company, position})
-
-
-    successResponse(res, StatusCodes.CREATED, 'successfully created new job', newJob)
-
-}
-
-
-export const getJob = async (req, res) => {
-    const jobId = req.params.id
-
-    const job = await Jobs.findOne({_id: jobId})
-
-    if (!job){
-        return errorResponse(res, StatusCodes.NOT_FOUND, 'That job doesnt exist')
-    }
-
-    successResponse(res, StatusCodes.OK, 'successfully found job', job)
-
-}
-
-export const getAllJobs = async (req, res) => {
-    const jobs = await Jobs.find({})
-
-    if (!jobs){
-        return errorResponse(res, StatusCodes.NOT_FOUND, 'No job found')
-    }
-
-    successResponse(res, StatusCodes.OK, 'successfully found jobs', jobs)
-
-}
-
-
-export const deleteJob = async (req, res) => {
+        if (!company || !position){
+            logger.info(`END: Create Job Service`)
+            return errorResponse(res, StatusCodes.UNPROCESSABLE_ENTITY, 'missing parameters for job creation')
+        }
     
-    const jobId = req.params.id
+        const newJob = await Jobs.create({company, position})
 
-    const job = await Jobs.findOne({_id: jobId})
-
-    if (!job){
-        return errorResponse(res, StatusCodes.BAD_REQUEST, `job does not exist`)
+        logger.info(`END: Create Job Service`)
+        successResponse(res, StatusCodes.CREATED, 'successfully created new job', newJob)
+    }catch(error){
+        logger.error(error)
+        next(error)
     }
 
-    await Jobs.deleteOne({_id: jobId})
-
-    successResponse(res, StatusCodes.OK, `successfully deleted a job`, null)
 
 }
 
 
-export const updateJob = async (req, res) => {
-    const jobId = req.params.id
-    const {position} = req.body
-    
-    const updatedJob = await Jobs.findOneAndUpdate({_id: jobId}, {position: position}, {new: true, runValidators: true})
+export const getJob = async (req, res, next) => {
+    try{
+        logger.info(`START: Get Job Service`)
+        const jobId = req.params.id
 
-    if (!updatedJob){
-        return errorResponse(res, StatusCodes.BAD_REQUEST, `job does not exist`)
+        const job = await Jobs.findOne({_id: jobId})
+    
+        if (!job){
+            logger.info(`END: Get Job Service`)
+            return errorResponse(res, StatusCodes.NOT_FOUND, 'That job doesnt exist')
+        }
+        logger.info(`END: Get Job Service`)
+        successResponse(res, StatusCodes.OK, 'successfully found job', job)
+    }catch(error){
+        logger.error(error)
+        next(error)
     }
 
-    successResponse(res, StatusCodes.OK, 'successfully updated job details', updatedJob)
+}
+
+export const getAllJobs = async (req, res, next) => {
+    try{
+        const jobId = req.params.id
+
+        const job = await Jobs.findOne({_id: jobId})
+    
+        if (!job){
+            return errorResponse(res, StatusCodes.NOT_FOUND, 'That job doesnt exist')
+        }
+    
+        successResponse(res, StatusCodes.OK, 'successfully found job', job)
+
+    }catch(error){
+        console.log(error)
+        next(error)
+    }
+
+}
+
+
+export const deleteJob = async (req, res, next) => {
+    try{
+        const jobId = req.params.id
+
+        const job = await Jobs.findOne({_id: jobId})
+    
+        if (!job){
+            return errorResponse(res, StatusCodes.BAD_REQUEST, `job does not exist`)
+        }
+    
+        await Jobs.deleteOne({_id: jobId})
+    
+        successResponse(res, StatusCodes.OK, `successfully deleted a job`, null)
+
+    }catch(error){
+        console.log(error)
+        next(error)
+    }
+
+}
+
+
+export const updateJob = async (req, res, next) => {
+    try{
+        const jobId = req.params.id
+        const {position} = req.body
+        
+        const updatedJob = await Jobs.findOneAndUpdate({_id: jobId}, {position: position}, {new: true, runValidators: true})
+    
+        if (!updatedJob){
+            return errorResponse(res, StatusCodes.BAD_REQUEST, `job does not exist`)
+        }
+    
+        successResponse(res, StatusCodes.OK, 'successfully updated job details', updatedJob)
+
+    }catch(error){
+        console.log(error)
+        next(error)
+    }
 
 }
 
