@@ -14,6 +14,8 @@ jobRouter.delete('/:id', deleteJob)
 // jobRouter.route('/').post(createJob).get(getAllJobs)
 // jobRouter.route('/:id).get(getJob).patch(updateJob).delete(deleteJob)
 
+// REST specification
+
 
 
 
