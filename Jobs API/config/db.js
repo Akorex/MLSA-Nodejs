@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { configDotenv } from "dotenv";
+import logger from "../utils/logger.js";
 
 
 configDotenv()
@@ -9,8 +10,8 @@ export const port = process.env.PORT
 const connectDB = async () => {
     return mongoose
     .connect(mongo_uri)
-    .then(() => console.log("Connected to the database successfully"))
-    .catch((error) =>console.log(`Unable to connect to the database ${error}`))
+    .then(() => logger.info("Connected to the database successfully"))
+    .catch((error) =>logger.info(`Unable to connect to the database ${error}`))
 
 }
 

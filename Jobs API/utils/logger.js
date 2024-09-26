@@ -1,8 +1,16 @@
-import { createLogger, format, transports } from "winston";
+import { createLogger, format, transports, addColors } from "winston";
 
 const {combine, timestamp, colorize, printf} = format
 
 const logFormat = printf(( {timestamp, level, message}) => `${timestamp} ${level} ${message}`)
+
+addColors({
+        error: 'bold red',
+        warn: 'bold yellow',
+        info: 'bold cyan',
+        debug: 'bold green'
+})
+
 
 
 const logger = createLogger({

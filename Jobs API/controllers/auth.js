@@ -34,7 +34,7 @@ export const registerAccount = async (req, res, next) => {
 
 
     }catch(error){
-        logger.error(error)
+        console.log(error)
         next(error)
     }
 }
@@ -43,6 +43,10 @@ export const registerAccount = async (req, res, next) => {
 export const loginAccount = async (req, res, next) => {
     try{
         logger.info(`START: Login Account Service`)
+
+
+        const header = req.headers['authorization']
+        console.log(header)
         const {username, password} = req.body
 
         if (!username || !password){
@@ -60,8 +64,10 @@ export const loginAccount = async (req, res, next) => {
             return errorResponse(res, StatusCodes.BAD_REQUEST, `You have entered a wrong username/password`)
         }
 
+        const accessToken = createAccessToken(user._id)
 
-        successResponse(res, StatusCodes.OK, `successfully logged in`, user)
+        logger.info(`END: Login Account Service`)
+        successResponse(res, StatusCodes.OK, `successfully logged in`, {user, token:accessToken})
 
     }catch(error){
         logger.error(error)

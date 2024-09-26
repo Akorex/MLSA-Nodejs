@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { createJob, deleteJob, getAllJobs, getJob, updateJob } from "../controllers/jobs.js";
-
+import isLoggedIn from "../middlewares/authentication.js";
 
 const jobRouter = Router()
-jobRouter.post('/', createJob)
+jobRouter.post('/', isLoggedIn, createJob)
 jobRouter.get('/', getAllJobs)
 jobRouter.get('/:id', getJob)
 jobRouter.patch('/:id', updateJob)

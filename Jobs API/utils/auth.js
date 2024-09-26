@@ -1,12 +1,13 @@
-import pkg from 'bcryptjs';
-import pkg2 from 'jsonwebtoken'
+import bcryptjs from 'bcryptjs';
+import jsonwebtoken from 'jsonwebtoken'
 import { configDotenv } from 'dotenv';
 
 
 configDotenv()
-const { genSaltSync, hashSync, compareSync } = pkg;
-const {sign} = pkg2
+const { genSaltSync, hashSync, compareSync } = bcryptjs;
+const {sign, verify} = jsonwebtoken
 const jwt_secret = process.env.JWT_SECRET
+const jwt_lifetime = process.env.jwt_lifetime
 
 
 
@@ -23,8 +24,14 @@ export const checkValidity = (value, otherValue) => {
     return compareSync(value, otherValue)
 }
 
+
+
 export const createAccessToken = (id) => {
-    const token = sign({id}, jwt_secret)
+    const token = sign({id}, jwt_secret, {expiresIn: jwt_lifetime})
 
     return token
+}
+
+export const isTokenValid = (token) => {
+    return verify(token, jwt_secret)
 }
