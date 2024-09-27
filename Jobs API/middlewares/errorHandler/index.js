@@ -24,6 +24,7 @@ const errorHandler = (error, req, res, next) => {
 // benefits of errorHandler
 // format error from where your code is depending on
 // dont repeat error cases
+//
 
 
 
