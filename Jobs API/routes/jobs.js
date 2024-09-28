@@ -3,12 +3,14 @@ import { createJob, deleteJob, getAllJobs, getJob, updateJob } from "../controll
 import isLoggedIn from "../middlewares/authentication.js";
 
 const jobRouter = Router()
-jobRouter.post('/', isLoggedIn, createJob)
-jobRouter.get('/', getAllJobs)
-jobRouter.get('/:id', getJob)
-jobRouter.patch('/:id', updateJob)
-jobRouter.delete('/:id', deleteJob)
+jobRouter.post('/', createJob)
+jobRouter.get('/',isLoggedIn, getAllJobs)
+jobRouter.get('/:id',isLoggedIn, getJob)
+jobRouter.patch('/:id',isLoggedIn, updateJob)
+jobRouter.delete('/:id', isLoggedIn, deleteJob)
 
+
+// change 3
 
 // if you want to chain these, you could do
 // jobRouter.route('/').post(createJob).get(getAllJobs)

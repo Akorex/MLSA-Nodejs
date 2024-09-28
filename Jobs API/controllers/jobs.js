@@ -4,24 +4,26 @@ import {StatusCodes} from 'http-status-codes'
 import logger from '../utils/logger.js'
 
 
+// change 2 -> 
 
 export const createJob = async (req, res, next) => {
     try{
         logger.info(`START: Create Job Service`)
         const {company, position} = req.body
+        const userId = req.user.userId
 
         if (!company || !position){
             logger.info(`END: Create Job Service`)
             return errorResponse(res, StatusCodes.UNPROCESSABLE_ENTITY, 'missing parameters for job creation')
         }
     
-        const newJob = await Jobs.create({company, position})
+        const newJob = await Jobs.create({company, position, createdBy: userId})
 
         logger.info(`END: Create Job Service`)
         successResponse(res, StatusCodes.CREATED, 'successfully created new job', newJob)
     }catch(error){
-        logger.error(error)
-        next(error)
+       console.log(error)
+       next(error)
     }
 
 
@@ -32,8 +34,9 @@ export const getJob = async (req, res, next) => {
     try{
         logger.info(`START: Get Job Service`)
         const jobId = req.params.id
+        const userId = req.user.userId
 
-        const job = await Jobs.findOne({_id: jobId})
+        const job = await Jobs.findOne({_id: jobId, createdBy: userId})
     
         if (!job){
             logger.info(`END: Get Job Service`)
@@ -51,8 +54,9 @@ export const getJob = async (req, res, next) => {
 export const getAllJobs = async (req, res, next) => {
     try{
         const jobId = req.params.id
+        const userId = req.user.userId
 
-        const job = await Jobs.findOne({_id: jobId})
+        const job = await Jobs.findOne({_id: jobId, createdBy: userId})
     
         if (!job){
             return errorResponse(res, StatusCodes.NOT_FOUND, 'That job doesnt exist')
@@ -71,8 +75,9 @@ export const getAllJobs = async (req, res, next) => {
 export const deleteJob = async (req, res, next) => {
     try{
         const jobId = req.params.id
+        const userId = req.user.userId
 
-        const job = await Jobs.findOne({_id: jobId})
+        const job = await Jobs.findOne({_id: jobId, createdBy: userId})
     
         if (!job){
             return errorResponse(res, StatusCodes.BAD_REQUEST, `job does not exist`)
@@ -94,8 +99,11 @@ export const updateJob = async (req, res, next) => {
     try{
         const jobId = req.params.id
         const {position} = req.body
+        const userId = req.user.userId
         
-        const updatedJob = await Jobs.findOneAndUpdate({_id: jobId}, {position: position}, {new: true, runValidators: true})
+        const updatedJob = await Jobs.findOneAndUpdate({_id: jobId, createdy:userId}, 
+            {position: position},
+             {new: true, runValidators: true})
     
         if (!updatedJob){
             return errorResponse(res, StatusCodes.BAD_REQUEST, `job does not exist`)
