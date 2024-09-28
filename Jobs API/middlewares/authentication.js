@@ -4,7 +4,6 @@ import { isTokenValid } from "../utils/auth.js"
 const isLoggedIn = (req, res, next) => {
     const authHeader = req.headers['authorization']
 
-
     if (!authHeader){
         return next(ApiError.badRequest('unauthorized'))
     }

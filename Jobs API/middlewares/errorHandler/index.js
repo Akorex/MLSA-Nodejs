@@ -30,12 +30,18 @@ const errorHandler = (error, req, res, next) => {
         errCode = StatusCodes.BAD_REQUEST //400
     }else if (error instanceof Error){
         if (error.name === 'ValidationError'){
-            console.log(JSON.stringify(error.errors))
             message = Object.values(error.errors).map(err => err.message).join(' ')
             errCode = StatusCodes.UNPROCESSABLE_ENTITY
-        }else{
+        }if (error.name === 'MongoServerError'){
+            if (error.errorResponse.code === 11000){
+                message = "Resource already exists"
+                errCode = StatusCodes.CONFLICT
+            }
+        }
+        
+        else{
             message = error.message
-            errCode = StatusCodes.BAD_GATEWAY
+            errCode = StatusCodes.BAD_GATEWAY //502
         }
     }
 

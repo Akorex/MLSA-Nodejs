@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+import mongoose, {Schema} from "mongoose";
 
 const jobSchema = new mongoose.Schema({
     company : {
@@ -17,6 +17,12 @@ const jobSchema = new mongoose.Schema({
         type: String,
         enum: ['interview', 'pending', 'declined'],
         default: 'pending'
+    },
+
+    createdBy: {
+        type:Schema.Types.ObjectId,
+        ref: 'users',
+        required: true
     }
 
 }, {timestamps: true})
