@@ -3,7 +3,7 @@ import { createJob, deleteJob, getAllJobs, getJob, updateJob } from "../controll
 import isLoggedIn from "../middlewares/authentication.js";
 
 const jobRouter = Router()
-jobRouter.post('/', createJob)
+jobRouter.post('/', isLoggedIn, createJob)
 jobRouter.get('/',isLoggedIn, getAllJobs)
 jobRouter.get('/:id',isLoggedIn, getJob)
 jobRouter.patch('/:id',isLoggedIn, updateJob)
